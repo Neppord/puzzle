@@ -3,9 +3,9 @@ module Main exposing (main)
 import Browser exposing (element)
 import Color exposing (red)
 import Svg.Attributes exposing (id)
-import TypedSvg exposing (circle, defs, svg, use)
+import TypedSvg exposing (circle, clipPath, defs, rect, svg, use)
 import TypedSvg.Attributes exposing (cx, cy, fill, height, r, width, x, xlinkHref, y)
-import TypedSvg.Types exposing (Fill(..), num, px)
+import TypedSvg.Types exposing (ClipPath(..), Fill(..), num, px)
 
 
 main =
@@ -32,8 +32,17 @@ view _ =
         [ defs
             []
             [ puzzleImage
+            , clipPath [ id "piece-0-0" ]
+                [ rect [ width <| px 100, height <| px 100 ] []
+                ]
             ]
-        , use [ x <| px 0, y <| px 0, xlinkHref <| "#puzzle-image" ] []
+        , use
+            [ x <| px 0
+            , y <| px 0
+            , xlinkHref <| "#puzzle-image"
+            , TypedSvg.Attributes.clipPath <| ClipPathFunc "url(#piece-0-0)"
+            ]
+            []
         ]
 
 
