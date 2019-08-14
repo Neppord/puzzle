@@ -1,10 +1,10 @@
 module Main exposing (main)
 
 import Browser exposing (element)
-import Color exposing (red)
+import Color exposing (black, red)
 import Svg.Attributes exposing (id)
-import TypedSvg exposing (circle, clipPath, defs, rect, svg, use)
-import TypedSvg.Attributes exposing (cx, cy, fill, height, r, width, x, xlinkHref, y)
+import TypedSvg exposing (circle, clipPath, defs, g, rect, svg, use)
+import TypedSvg.Attributes exposing (cx, cy, fill, height, r, stroke, strokeWidth, width, x, xlinkHref, y)
 import TypedSvg.Types exposing (ClipPath(..), Fill(..), num, px)
 
 
@@ -26,8 +26,8 @@ init () =
 
 view _ =
     svg
-        [ width <| num 200
-        , height <| num 200
+        [ width <| num 800
+        , height <| num 600
         ]
         [ defs
             []
@@ -45,13 +45,24 @@ view _ =
 
 
 piece x y =
-    use
-        [ TypedSvg.Attributes.x <| px <| toFloat x
-        , TypedSvg.Attributes.y <| px <| toFloat y
-        , xlinkHref <| "#puzzle-image"
-        , TypedSvg.Attributes.clipPath <| clipPathRef x y
+    g []
+        [ use
+            [ TypedSvg.Attributes.x <| px <| toFloat x
+            , TypedSvg.Attributes.y <| px <| toFloat y
+            , xlinkHref <| "#puzzle-image"
+            , TypedSvg.Attributes.clipPath <| clipPathRef x y
+            ]
+            []
+        , use
+            [ TypedSvg.Attributes.x <| px <| toFloat x
+            , TypedSvg.Attributes.y <| px <| toFloat y
+            , xlinkHref <| "#" ++ pieceOutlineId x y
+            , fill FillNone
+            , stroke <| black
+            , strokeWidth <| px 3
+            ]
+            []
         ]
-        []
 
 
 clipPathRef x y =
@@ -61,7 +72,8 @@ clipPathRef x y =
 pieceClipPath x y =
     clipPath [ id <| pieceClipId x y ]
         [ rect
-            [ width <| px 100
+            [ id <| pieceOutlineId x y
+            , width <| px 100
             , height <| px 100
             , TypedSvg.Attributes.x <| px <| toFloat <| x * 100
             , TypedSvg.Attributes.y <| px <| toFloat <| y * 100
@@ -72,6 +84,10 @@ pieceClipPath x y =
 
 pieceClipId x y =
     "piece-" ++ String.fromInt x ++ "-" ++ String.fromInt y ++ "-clip"
+
+
+pieceOutlineId x y =
+    "piece-" ++ String.fromInt x ++ "-" ++ String.fromInt y ++ "-outline"
 
 
 puzzleImage =
