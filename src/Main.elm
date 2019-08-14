@@ -32,18 +32,46 @@ view _ =
         [ defs
             []
             [ puzzleImage
-            , clipPath [ id "piece-0-0" ]
-                [ rect [ width <| px 100, height <| px 100 ] []
-                ]
+            , pieceClipPath 0 0
+            , pieceClipPath 1 0
+            , pieceClipPath 0 1
+            , pieceClipPath 1 1
             ]
-        , use
-            [ x <| px 0
-            , y <| px 0
-            , xlinkHref <| "#puzzle-image"
-            , TypedSvg.Attributes.clipPath <| ClipPathFunc "url(#piece-0-0)"
+        , piece 0 0
+        , piece 1 0
+        , piece 0 1
+        , piece 1 1
+        ]
+
+
+piece x y =
+    use
+        [ TypedSvg.Attributes.x <| px <| toFloat x
+        , TypedSvg.Attributes.y <| px <| toFloat y
+        , xlinkHref <| "#puzzle-image"
+        , TypedSvg.Attributes.clipPath <| clipPathRef x y
+        ]
+        []
+
+
+clipPathRef x y =
+    ClipPathFunc <| "url(#" ++ pieceClipId x y ++ ")"
+
+
+pieceClipPath x y =
+    clipPath [ id <| pieceClipId x y ]
+        [ rect
+            [ width <| px 100
+            , height <| px 100
+            , TypedSvg.Attributes.x <| px <| toFloat <| x * 100
+            , TypedSvg.Attributes.y <| px <| toFloat <| y * 100
             ]
             []
         ]
+
+
+pieceClipId x y =
+    "piece-" ++ String.fromInt x ++ "-" ++ String.fromInt y ++ "-clip"
 
 
 puzzleImage =
