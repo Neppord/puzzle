@@ -1,7 +1,11 @@
 module Main exposing (main)
 
 import Browser exposing (element)
-import Html exposing (text)
+import Color exposing (red)
+import Svg.Attributes exposing (id)
+import TypedSvg exposing (circle, defs, svg, use)
+import TypedSvg.Attributes exposing (cx, cy, fill, height, r, width, x, xlinkHref, y)
+import TypedSvg.Types exposing (Fill(..), num, px)
 
 
 main =
@@ -21,7 +25,27 @@ init () =
 
 
 view _ =
-    text "Hello World"
+    svg
+        [ width <| num 200
+        , height <| num 200
+        ]
+        [ defs
+            []
+            [ puzzleImage
+            ]
+        , use [ x <| px 0, y <| px 0, xlinkHref <| "#puzzle-image" ] []
+        ]
+
+
+puzzleImage =
+    circle
+        [ id "puzzle-image"
+        , cx <| px 100
+        , cy <| px 100
+        , r <| px 100
+        , fill <| Fill red
+        ]
+        []
 
 
 update _ model =
